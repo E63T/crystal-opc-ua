@@ -1,7 +1,7 @@
 # Both session and channels have timeouts that need to be managed
 require "tasker"
 require "promise"
-require "logger"
+require "log"
 
 # https://reference.opcfoundation.org/v104/Core/docs/Part4/5.6.2/
 # OPC Channels are a conduit for session data. We should be able to cleanly
@@ -18,7 +18,7 @@ class OPC::Channel # < IO
 
   alias Response = IO::Memory?
 
-  def initialize(io : IO, @logger = Logger.new(STDOUT))
+  def initialize(io : IO, @logger = Log.for(self.class))
     io.sync = false if io.responds_to?(:sync)
     @io = io
     @state = State::Idle
@@ -329,7 +329,7 @@ class OPC::Channel # < IO
       end
     end
   rescue IO::Error
-  rescue Errno
+  #rescue Errno
     # Input stream closed. This should only occur on termination
   ensure
     @state = State::ChannelClosed

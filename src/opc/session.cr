@@ -1,7 +1,7 @@
 # Both session and channels have timeouts that need to be managed
 require "tasker"
 require "promise"
-require "logger"
+require "log"
 require "uuid"
 
 # https://reference.opcfoundation.org/v104/Core/docs/Part4/5.6.2/
@@ -16,7 +16,7 @@ class OPC::Session
     SessionClosed
   end
 
-  def initialize(@channel : OPC::Channel, @security_policy : EndPointDescription, @logger = Logger.new(STDOUT))
+  def initialize(@channel : OPC::Channel, @security_policy : EndPointDescription, @logger = Log.for(self.class))
     @state = State::Idle
     @activated = false
 

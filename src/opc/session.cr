@@ -143,6 +143,17 @@ class OPC::Session
     response
   end
 
+  def write(node, attribute, value) : WriteResponse
+    req = OPC::WriteRequest.new
+    req.nodes_to_write << OPC::WriteValue.new(node, attribute, value)
+    io = send req
+
+    header = check_response(io, :write_response, :write_response_encoding_default_binary)
+    response = io.read_bytes(WriteResponse)
+    response.header = header
+    response
+  end
+
   def check_response(io, *codes)
     node_id = io.read_bytes(NodeID)
     response_code = ObjectLookup[node_id.four_byte_data]

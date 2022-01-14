@@ -19,6 +19,13 @@ module OPC
       read
     end
 
+    def self.new(node : NodeID, attribute)
+      read = ReadValueId.new
+      read.node_id = node
+      read.attribute_id = attribute
+      read
+    end
+
     custom node_id : NodeID = NodeID.new
     uint32 attribute_id
 

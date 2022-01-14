@@ -143,7 +143,7 @@ class OPC::Session
     response
   end
 
-  def read(nodes : Enumerable(T), attribute) : ReadResponse
+  def read(nodes : Enumerable(T), attribute) : ReadResponse forall T
     req = OPC::ReadRequest.new
     nodes.each do |n|
       req << OPC::ReadValueId.new(n, attribute)

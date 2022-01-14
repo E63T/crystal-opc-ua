@@ -143,6 +143,19 @@ class OPC::Session
     response
   end
 
+  def read(nodes : Enumerable(T), attribute) : ReadResponse
+    req = OPC::ReadRequest.new
+    nodes.each do |n|
+      req << OPC::ReadValueId.new(n, attribute)
+    end
+    io = send req
+
+    header = check_response(io, :read_response, :read_response_encoding_default_binary)
+    response = io.read_bytes(ReadResponse)
+    response.header = header
+    response
+  end
+
   def write(node, attribute, value) : WriteResponse
     req = OPC::WriteRequest.new
     req.nodes_to_write << OPC::WriteValue.new(node, attribute, value)
